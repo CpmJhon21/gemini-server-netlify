@@ -93,6 +93,57 @@
             scroll-behavior: smooth;
             background: linear-gradient(to bottom, #131320, #1a1a2e);
         }
+        
+.message-wrapper {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+    max-width: 80%;
+}
+
+.message-wrapper.user {
+    justify-content: flex-end;
+}
+
+.message-wrapper.ai {
+    justify-content: flex-start;
+}
+
+/* Chat bubble styling */
+.chat-bubble {
+    padding: 10px 15px;
+    border-radius: 15px;
+    max-width: 70%;
+    word-wrap: break-word;
+    font-size: 14px;
+}
+
+.user .chat-bubble {
+    background-color: #6a5acd;
+    color: white;
+    text-align: right;
+}
+
+.ai .chat-bubble {
+    background-color: #333;
+    color: white;
+    text-align: left;
+}
+
+/* Avatar styling */
+.avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin: 0 10px;
+}
+
+/* Timestamp styling */
+.timestamp {
+    font-size: 12px;
+    color: gray;
+    margin: 5px;
+}
 
         .welcome-message {
             text-align: center;
@@ -495,32 +546,40 @@ async function generateContent() {
     }
 }
 
-// FUNGSI appendMessage() DILETAKKAN DI BAWAH
+// FUNGSI appendMessage() DENGAN TAMBAHAN chat-bubble
 function appendMessage(message, sender) {
     const chatContainer = document.getElementById('chat-container');
     const messageWrapper = document.createElement("div");
     messageWrapper.classList.add("message-wrapper", sender);
 
+    // Tambahkan elemen bubble untuk pesan
+    const messageBubble = document.createElement("div");
+    messageBubble.classList.add("chat-bubble");
+    
     // Tambahkan foto profil
     const avatar = document.createElement("img");
     avatar.classList.add("avatar");
     avatar.src = sender === "user" ? "user.png" : "ai.png";
     avatar.alt = sender === "user" ? "You" : "AI";
 
-    // Tambahkan pesan
-    const messageContent = document.createElement("div");
-    messageContent.classList.add("message-content");
-    messageContent.textContent = message;
+    // Tambahkan pesan dalam bubble
+    messageBubble.textContent = message;
 
     // Tambahkan timestamp
     const timestamp = document.createElement("span");
     timestamp.classList.add("timestamp");
     timestamp.textContent = new Date().toLocaleTimeString();
 
-    // Susun elemen
-    messageWrapper.appendChild(avatar);
-    messageWrapper.appendChild(messageContent);
-    messageWrapper.appendChild(timestamp);
+    // Susun elemen sesuai posisi user atau AI
+    if (sender === "user") {
+        messageWrapper.appendChild(timestamp);
+        messageWrapper.appendChild(messageBubble);
+        messageWrapper.appendChild(avatar);
+    } else {
+        messageWrapper.appendChild(avatar);
+        messageWrapper.appendChild(messageBubble);
+        messageWrapper.appendChild(timestamp);
+    }
 
     chatContainer.appendChild(messageWrapper);
     chatContainer.scrollTop = chatContainer.scrollHeight; // Auto-scroll ke bawah
