@@ -460,9 +460,9 @@ async function generateContent() {
     promptInput.disabled = true;
     submitBtn.disabled = true;
 
-    // Tambahkan pesan user
-    appendMessage(`You: ${prompt}`, true);
-    
+    // Tambahkan pesan user ke chat
+    appendMessage(prompt, "user");
+
     // Tampilkan animasi typing
     const typingIndicator = showTypingIndicator();
     promptInput.value = '';
@@ -482,10 +482,10 @@ async function generateContent() {
         removeTypingIndicator(typingIndicator);
 
         // Tambahkan pesan AI ke chat
-        appendMessage(`<strong>AI:</strong> ${data.response || "No response available."}`);
+        appendMessage(data.response || "No response available.", "ai");
     } catch (error) {
         removeTypingIndicator(typingIndicator);
-        appendMessage(`<strong>AI:</strong> Error connecting to server.`);
+        appendMessage("Error connecting to server.", "ai");
         console.error('Error:', error);
     } finally {
         isGenerating = false;
@@ -495,6 +495,36 @@ async function generateContent() {
     }
 }
 
+// FUNGSI appendMessage() DILETAKKAN DI BAWAH
+function appendMessage(message, sender) {
+    const chatContainer = document.getElementById('chat-container');
+    const messageWrapper = document.createElement("div");
+    messageWrapper.classList.add("message-wrapper", sender);
+
+    // Tambahkan foto profil
+    const avatar = document.createElement("img");
+    avatar.classList.add("avatar");
+    avatar.src = sender === "user" ? "user.png" : "ai.png";
+    avatar.alt = sender === "user" ? "You" : "AI";
+
+    // Tambahkan pesan
+    const messageContent = document.createElement("div");
+    messageContent.classList.add("message-content");
+    messageContent.textContent = message;
+
+    // Tambahkan timestamp
+    const timestamp = document.createElement("span");
+    timestamp.classList.add("timestamp");
+    timestamp.textContent = new Date().toLocaleTimeString();
+
+    // Susun elemen
+    messageWrapper.appendChild(avatar);
+    messageWrapper.appendChild(messageContent);
+    messageWrapper.appendChild(timestamp);
+
+    chatContainer.appendChild(messageWrapper);
+    chatContainer.scrollTop = chatContainer.scrollHeight; // Auto-scroll ke bawah
+}
 
 
 document.addEventListener('DOMContentLoaded', () => {
