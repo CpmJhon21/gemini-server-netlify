@@ -451,20 +451,23 @@ async function generateContent() {
 
     const promptInput = document.getElementById('prompt');
     const submitBtn = document.getElementById('submit-btn');
+    const chatContainer = document.getElementById('chat-container');
 
     const prompt = promptInput.value.trim();
     if (!prompt) return;
 
     isGenerating = true;
     promptInput.disabled = true;
-    if (submitBtn) submitBtn.disabled = true;
+    submitBtn.disabled = true;
 
-    appendMessage(prompt, true);
+    // Tambahkan pesan user
+    appendMessage(`<strong>You:</strong> ${prompt}`, true);
+    
+    // Tampilkan animasi typing
     const typingIndicator = showTypingIndicator();
     promptInput.value = '';
 
     try {
-        // Ganti dengan /api/generate agar Netlify menangani backend
         const response = await fetch("/api/generate", {
             method: "POST",
             headers: {
@@ -478,19 +481,16 @@ async function generateContent() {
         const data = await response.json();
         removeTypingIndicator(typingIndicator);
 
-        if (data.response) {
-            appendMessage(data.response);
-        } else {
-            appendMessage("Sorry, there was an error processing your request.");
-        }
+        // Tambahkan pesan AI ke chat
+        appendMessage(`<strong>AI:</strong> ${data.response || "No response available."}`);
     } catch (error) {
         removeTypingIndicator(typingIndicator);
-        appendMessage("Error connecting to the server. Please try again.");
+        appendMessage(`<strong>AI:</strong> Error connecting to server.`);
         console.error('Error:', error);
     } finally {
         isGenerating = false;
         promptInput.disabled = false;
-        if (submitBtn) submitBtn.disabled = false;
+        submitBtn.disabled = false;
         promptInput.focus();
     }
 }
