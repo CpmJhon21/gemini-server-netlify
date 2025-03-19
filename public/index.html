@@ -374,10 +374,8 @@
             </button>
         </div>
     </div>
-
-    <script>
 marked.setOptions({
-    highlight: function(code, lang) {
+    highlight: function (code, lang) {
         if (lang && hljs.getLanguage(lang)) {
             return hljs.highlight(code, { language: lang }).value;
         }
@@ -399,12 +397,15 @@ function appendMessage(content, isUser = false) {
     const chatContainer = document.getElementById('chat-container');
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${isUser ? 'user-message' : 'assistant-message'}`;
-    
+
     if (isUser) {
         messageDiv.textContent = content;
     } else {
         messageDiv.innerHTML = marked.parse(content);
         messageDiv.querySelectorAll('pre').forEach((pre) => {
+            // Hapus tombol copy yang sudah ada agar tidak duplikat
+            pre.querySelectorAll('.copy-button').forEach(btn => btn.remove());
+
             const copyButton = document.createElement('button');
             copyButton.className = 'copy-button';
             copyButton.innerHTML = '<i class="fas fa-copy"></i><span>Copy</span>';
@@ -414,11 +415,12 @@ function appendMessage(content, isUser = false) {
                     .then(() => showToast('Copied to clipboard!'))
                     .catch(() => showToast('Failed to copy!'));
             };
+
             pre.appendChild(copyButton);
             hljs.highlightElement(pre.querySelector('code'));
         });
     }
-    
+
     chatContainer.appendChild(messageDiv);
     chatContainer.scrollTop = chatContainer.scrollHeight;
 }
@@ -444,27 +446,51 @@ function removeTypingIndicator(indicator) {
 }
 
 async function generateContent() {
-    const promptInput = document.getElementById('prompt');
-    const chatContainer = document.getElementById('chat-container');
-    const prompt = promptInput.value.trim();
+    if (isGenerating) return;
 
+    const promptInput = document.getElementById('prompt');
+    const submitBtn = document.getElementById('submit-btn');
+
+    const prompt = promptInput.value.trim();
     if (!prompt) return;
 
-    chatContainer.innerHTML += `<p><strong>You:</strong> ${prompt}</p>`;
+    isGenerating = true;
+    promptInput.disabled = true;
+    if (submitBtn) submitBtn.disabled = true;
+
+    appendMessage(prompt, true);
+    const typingIndicator = showTypingIndicator();
     promptInput.value = '';
 
     try {
-        const response = await fetch('/api/generate', {
+        // Ganti dengan /api/generate agar Netlify menangani backend
+        const response = await fetch("/api/generate", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ prompt })
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ prompt: prompt })
         });
 
+        if (!response.ok) throw new Error('Network response was not ok');
+
         const data = await response.json();
-        chatContainer.innerHTML += `<p><strong>AI:</strong> ${data.response || "No response available."}</p>`;
+        removeTypingIndicator(typingIndicator);
+
+        if (data.response) {
+            appendMessage(data.response);
+        } else {
+            appendMessage("Sorry, there was an error processing your request.");
+        }
     } catch (error) {
-        chatContainer.innerHTML += `<p><strong>AI:</strong> Error connecting to server.</p>`;
-        console.error(error);
+        removeTypingIndicator(typingIndicator);
+        appendMessage("Error connecting to the server. Please try again.");
+        console.error('Error:', error);
+    } finally {
+        isGenerating = false;
+        promptInput.disabled = false;
+        if (submitBtn) submitBtn.disabled = false;
+        promptInput.focus();
     }
 }
 
@@ -472,6 +498,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const promptInput = document.getElementById('prompt');
     promptInput.focus();
 });
+    <script>
+
     </script>
     </body>
     </html>
