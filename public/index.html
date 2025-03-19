@@ -460,9 +460,12 @@ async function generateContent() {
     promptInput.disabled = true;
     submitBtn.disabled = true;
 
-    // Tambahkan pesan user
-    appendMessage(`<strong>You:</strong> ${prompt}`, true);
-    
+    // Tambahkan pesan user dengan innerText untuk mencegah rendering HTML mentah
+    const userMessage = document.createElement("p");
+    userMessage.innerText = `You: ${prompt}`;
+    userMessage.className = "user-message";
+    chatContainer.appendChild(userMessage);
+
     // Tampilkan animasi typing
     const typingIndicator = showTypingIndicator();
     promptInput.value = '';
@@ -481,11 +484,19 @@ async function generateContent() {
         const data = await response.json();
         removeTypingIndicator(typingIndicator);
 
-        // Tambahkan pesan AI ke chat
-        appendMessage(`<strong>AI:</strong> ${data.response || "No response available."}`);
+        // Tambahkan pesan AI dengan innerText untuk menghindari tag HTML mentah
+        const aiMessage = document.createElement("p");
+        aiMessage.innerText = `AI: ${data.response || "No response available."}`;
+        aiMessage.className = "ai-message";
+        chatContainer.appendChild(aiMessage);
     } catch (error) {
         removeTypingIndicator(typingIndicator);
-        appendMessage(`<strong>AI:</strong> Error connecting to server.`);
+
+        const errorMessage = document.createElement("p");
+        errorMessage.innerText = "AI: Error connecting to server.";
+        errorMessage.className = "error-message";
+        chatContainer.appendChild(errorMessage);
+
         console.error('Error:', error);
     } finally {
         isGenerating = false;
@@ -494,6 +505,7 @@ async function generateContent() {
         promptInput.focus();
     }
 }
+
 
 document.addEventListener('DOMContentLoaded', () => {
     const promptInput = document.getElementById('prompt');
