@@ -446,6 +446,8 @@ function removeTypingIndicator(indicator) {
     }
 }
 
+let isGenerating = false; // Pastikan isGenerating sudah dideklarasikan
+
 async function generateContent() {
     if (isGenerating) return;
 
@@ -460,10 +462,9 @@ async function generateContent() {
     promptInput.disabled = true;
     submitBtn.disabled = true;
 
-    // Tambahkan pesan user
-    document.getElementById("userMessage").innerText = "You: " + userInput;
+    // Tambahkan pesan user ke chat
+    appendMessage(`You: ${prompt}`, true);
 
-    
     // Tampilkan animasi typing
     const typingIndicator = showTypingIndicator();
     promptInput.value = '';
@@ -483,10 +484,10 @@ async function generateContent() {
         removeTypingIndicator(typingIndicator);
 
         // Tambahkan pesan AI ke chat
-        appendMessage(`<strong>AI:</strong> ${data.response || "No response available."}`);
+        appendMessage(`AI: ${data.response || "No response available."}`);
     } catch (error) {
         removeTypingIndicator(typingIndicator);
-        appendMessage(`<strong>AI:</strong> Error connecting to server.`);
+        appendMessage(`AI: Error connecting to server.`);
         console.error('Error:', error);
     } finally {
         isGenerating = false;
@@ -495,7 +496,6 @@ async function generateContent() {
         promptInput.focus();
     }
 }
-
 
 
 document.addEventListener('DOMContentLoaded', () => {
