@@ -131,21 +131,6 @@
             overflow-x: auto;
             position: relative;
         }
-        
-        .avatar {
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
-          object-fit: cover;
-        }
-        
-        .timestamp {
-          display: block;
-          font-size: 12px;
-          margin-top: 5px;
-          border-radius: 50%;
-          object-fit: cover;
-        }
 
         .copy-button {
             position: absolute;
@@ -194,6 +179,26 @@
             color: #f3f4f6;
             border: 1px solid #2d2d3d;
             border-bottom-left-radius: 0.5rem;
+        }
+        
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .user-message .avatar {
+            order: 2; /* Avatar user di kanan */
+            margin-right: 0;
+            margin-left: 10px;
+        }
+        
+        .message-content {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 10px;
+            max-width: calc(100% - 50px);
         }
 
         .typing-indicator {
@@ -476,11 +481,21 @@ async function generateContent() {
     submitBtn.disabled = true;
 
     // Tambahkan pesan user ke chat
-    appendMessage(prompt, "user");
+    chatContainer.innerHTML += `
+        <div class="message user-message">
+            <img src="user-avatar.png" alt="User" class="avatar">
+            <div class="message-content">
+                <strong>You:</strong> ${prompt}
+            </div>
+        </div>
+    `;
 
     // Tampilkan animasi typing
     const typingIndicator = showTypingIndicator();
     promptInput.value = '';
+
+    // Auto-scroll ke bawah
+    chatContainer.scrollTop = chatContainer.scrollHeight;
 
     try {
         const response = await fetch("/api/generate", {
@@ -497,10 +512,28 @@ async function generateContent() {
         removeTypingIndicator(typingIndicator);
 
         // Tambahkan pesan AI ke chat
-        appendMessage(data.response || "No response available.", "ai");
+        chatContainer.innerHTML += `
+            <div class="message assistant-message">
+                <img src="ai-avatar.png" alt="AI" class="avatar">
+                <div class="message-content">
+                    <strong>AI:</strong> ${data.response || "No response available."}
+                </div>
+            </div>
+        `;
+
+        // Auto-scroll ke bawah setelah AI merespon
+        chatContainer.scrollTop = chatContainer.scrollHeight;
     } catch (error) {
         removeTypingIndicator(typingIndicator);
-        appendMessage("Error connecting to server.", "ai");
+        chatContainer.innerHTML += `
+            <div class="message assistant-message">
+                <img src="ai-avatar.png" alt="AI" class="avatar">
+                <div class="message-content">
+                    <strong>AI:</strong> Error connecting to server.
+                </div>
+            </div>
+        `;
+
         console.error('Error:', error);
     } finally {
         isGenerating = false;
@@ -509,38 +542,6 @@ async function generateContent() {
         promptInput.focus();
     }
 }
-
-// FUNGSI appendMessage() DILETAKKAN DI BAWAH
-function appendMessage(message, sender) {
-    const chatContainer = document.getElementById('chat-container');
-    const messageWrapper = document.createElement("div");
-    messageWrapper.classList.add("message-wrapper", sender);
-
-    // Tambahkan foto profil
-    const avatar = document.createElement("img");
-    avatar.classList.add("avatar");
-    avatar.src = sender === "user" ? "user.png" : "ai.png";
-    avatar.alt = sender === "user" ? "You" : "AI";
-
-    // Tambahkan pesan
-    const messageContent = document.createElement("div");
-    messageContent.classList.add("message-content");
-    messageContent.textContent = message;
-
-    // Tambahkan timestamp
-    const timestamp = document.createElement("span");
-    timestamp.classList.add("timestamp");
-    timestamp.textContent = new Date().toLocaleTimeString();
-
-    // Susun elemen
-    messageWrapper.appendChild(avatar);
-    messageWrapper.appendChild(messageContent);
-    messageWrapper.appendChild(timestamp);
-
-    chatContainer.appendChild(messageWrapper);
-    chatContainer.scrollTop = chatContainer.scrollHeight; // Auto-scroll ke bawah
-}
-
 
 document.addEventListener('DOMContentLoaded', () => {
     const promptInput = document.getElementById('prompt');
