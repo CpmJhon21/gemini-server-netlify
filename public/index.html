@@ -194,13 +194,6 @@
             margin-left: 10px;
         }
         
-        .message-content {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 10px;
-            border-radius: 10px;
-            max-width: calc(100% - 50px);
-        }
-
         .typing-indicator {
             display: flex;
             align-items: center;
@@ -484,7 +477,7 @@ async function generateContent() {
     chatContainer.innerHTML += `
         <div class="message user-message">
             <img src="user-avatar.png" alt="User" class="avatar">
-            <div class="message-content">
+            <div class="user-message">
                 <strong>You:</strong> ${prompt}
             </div>
         </div>
@@ -515,7 +508,7 @@ async function generateContent() {
         chatContainer.innerHTML += `
             <div class="message assistant-message">
                 <img src="ai-avatar.png" alt="AI" class="avatar">
-                <div class="message-content">
+                <div class="assistant-message">
                     <strong>AI:</strong> ${data.response || "No response available."}
                 </div>
             </div>
@@ -528,7 +521,7 @@ async function generateContent() {
         chatContainer.innerHTML += `
             <div class="message assistant-message">
                 <img src="ai-avatar.png" alt="AI" class="avatar">
-                <div class="message-content">
+                <div class="assistant-message">
                     <strong>AI:</strong> Error connecting to server.
                 </div>
             </div>
