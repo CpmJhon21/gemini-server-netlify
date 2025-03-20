@@ -398,6 +398,12 @@ function showToast(message) {
     setTimeout(() => toast.classList.remove('show'), 2000);
 }
 
+function sanitizeInput(input) {
+    const tempDiv = document.createElement('div');
+    tempDiv.textContent = input;
+    return tempDiv.innerHTML;
+}
+
 function appendMessage(content, isUser = false) {
     const chatContainer = document.getElementById('chat-container');
     const messageContainer = document.createElement('div');
@@ -434,8 +440,13 @@ function appendMessage(content, isUser = false) {
         });
     }
 
+    const timestamp = document.createElement('div');
+    timestamp.className = 'text-xs text-gray-400 mt-1';
+    timestamp.textContent = new Date().toLocaleTimeString();
+
     messageDiv.appendChild(messageHeader);
     messageDiv.appendChild(messageContent);
+    messageDiv.appendChild(timestamp);
     messageContainer.appendChild(messageDiv);
     chatContainer.appendChild(messageContainer);
     chatContainer.scrollTop = chatContainer.scrollHeight;
@@ -470,7 +481,7 @@ async function generateContent() {
     const submitBtn = document.getElementById('submit-btn');
     const chatContainer = document.getElementById('chat-container');
 
-    const prompt = promptInput.value.trim();
+    const prompt = sanitizeInput(promptInput.value.trim());
     if (!prompt) return;
 
     isGenerating = true;
