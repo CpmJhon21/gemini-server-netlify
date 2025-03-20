@@ -414,7 +414,7 @@ function appendMessage(content, isUser = false) {
 
     const messageHeader = document.createElement('div');
     messageHeader.className = 'font-bold mb-1 flex items-center';
-    messageHeader.innerHTML = isUser ? `<img class="w-6 h-6 rounded-full mr-2" src="https://ibb.co.com/PvyJ2t8j" alt="User avatar"> You:` : `<div class="profile-image w-6 h-6 rounded-full mr-2"><i class="fas fa-robot"></i></div> AI:`;
+    messageHeader.innerHTML = isUser ? `<img class="w-6 h-6 rounded-full mr-2" src="https://placehold.co/40x40?text=U" alt="User avatar"> You:` : `<div class="profile-image w-6 h-6 rounded-full mr-2"><i class="fas fa-robot"></i></div> AI:`;
 
     const messageContent = document.createElement('div');
     if (isUser) {
