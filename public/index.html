@@ -395,6 +395,24 @@
 }
 </style>
 
+
+<style>
+#chat-container {
+    display: flex;
+    flex-direction: column;
+}
+
+@media (min-width: 768px) {
+    .chat-bubble.user {
+        align-self: flex-end !important;
+        background-color: #2563eb;
+        color: white;
+        border-radius: 16px 16px 0 16px;
+        max-width: 70%;
+    }
+}
+</style>
+
 </head>
 <body>
     <div class="header">
