@@ -5,9 +5,9 @@
     <title>AI Assistant | By CPM_JHON</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" rel="stylesheet">
-    
-    
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.2/marked.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         * {
             margin: 0;
@@ -92,6 +92,8 @@
             padding: 8.5rem 1rem 7rem 1rem;
             scroll-behavior: smooth;
             background: linear-gradient(to bottom, #131320, #1a1a2e);
+            display: flex;
+            flex-direction: column;
         }
 
         .welcome-message {
@@ -176,6 +178,7 @@
             background: linear-gradient(135deg, #4f46e5, #6366f1);
             color: white;
             border-bottom-right-radius: 0.5rem;
+            align-self: flex-end;
         }
 
         .assistant-message {
@@ -382,37 +385,6 @@
             }
         }
     </style>
-
-<style>
-@media (min-width: 768px) {
-    .chat-bubble.user {
-        align-self: flex-end;
-        background-color: #2563eb;
-        color: white;
-        border-radius: 16px 16px 0 16px;
-        max-width: 70%;
-    }
-}
-</style>
-
-
-<style>
-#chat-container {
-    display: flex;
-    flex-direction: column;
-}
-
-@media (min-width: 768px) {
-    .chat-bubble.user {
-        align-self: flex-end !important;
-        background-color: #2563eb;
-        color: white;
-        border-radius: 16px 16px 0 16px;
-        max-width: 70%;
-    }
-}
-</style>
-
 </head>
 <body>
     <div class="header">
@@ -452,12 +424,7 @@
             </button>
         </div>
     </div>
-    
-    
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.2/marked.min.js"></script>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>
+    <script>
 marked.setOptions({
     highlight: function (code, lang) {
         if (lang && hljs.getLanguage(lang)) {
@@ -608,5 +575,6 @@ document.addEventListener('DOMContentLoaded', () => {
     promptInput.focus();
 });
     </script>
-</body>
+    </body>
     </html>
+ 
