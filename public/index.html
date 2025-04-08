@@ -338,6 +338,49 @@
                 display: none;
             }
         }
+
+        @media (min-width: 768px) {
+            .user-message {
+                align-self: flex-end;
+                border-bottom-left-radius: 1.25rem;
+                border-bottom-right-radius: 0.5rem;
+            }
+        }
+
+        /* Custom styles for submit button */
+        #submit-btn {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        #submit-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+            transform: scale(1.05);
+        }
+
+        #submit-btn:active {
+            background: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transform: scale(1);
+        }
+
+        @media (max-width: 768px) {
+            #submit-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.875rem;
+            }
+        }
+
+        @media (min-width: 768px) {
+            #submit-btn {
+                padding: 0.75rem 1.5rem;
+                font-size: 1rem;
+            }
+        }
     </style>
 </head>
 <body>
