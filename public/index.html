@@ -179,6 +179,7 @@
             color: white;
             border-bottom-right-radius: 0.5rem;
             align-self: flex-end;
+            margin-left: auto;
         }
 
         .assistant-message {
@@ -342,13 +343,18 @@
             }
         }
 
-        @media (min-width: 768px) {
-            .user-message {
-                align-self: flex-end;
-                border-bottom-left-radius: 1.25rem;
-                border-bottom-right-radius: 0.5rem;
-            }
-        }
+        @@media (min-width: 768px) {
+    .user-message {
+        align-self: flex-end !important;
+        margin-left: auto;
+        margin-right: 0;
+        border-top-left-radius: 1.25rem;
+        border-top-right-radius: 1.25rem;
+        border-bottom-left-radius: 1.25rem;
+        border-bottom-right-radius: 0.5rem;
+    }
+}
+
 
         /* Custom styles for submit button */
         #submit-btn {
